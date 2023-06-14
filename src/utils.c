@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/19 10:06:54 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/14 22:03:40 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,27 @@ int	ph_atoi(const char *nptr)
 		i++;
 	}
 	return (result * n);
+}
+
+void print_actions(t_philo *philo, int action)
+{
+    unsigned int time;
+
+    time = get_time() - philo->args->start;
+    if(action == 1)
+        printf("%u %d has taken a fork\n", time, philo->id);
+    if(action == 2)
+        printf("%u %d is eating\n", time, philo->id);
+    if(action == 3)
+        printf("%u %d is sleeping\n", time, philo->id);
+    if(action == 4)
+        printf("%u %d is thinking\n", time, philo->id);
+}
+
+unsigned int get_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec * 0.001));
 }
