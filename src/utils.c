@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/14 22:03:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/15 10:28:17 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ void print_actions(t_philo *philo, int action)
         printf("%u %d is sleeping\n", time, philo->id);
     if(action == 4)
         printf("%u %d is thinking\n", time, philo->id);
+    if(action == 5)
+        printf("%u %d died\n", time, philo->id);
+	
 }
 
 unsigned int get_time(void)

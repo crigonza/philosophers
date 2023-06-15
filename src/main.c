@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:05:31 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/14 22:19:47 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/15 13:06:07 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int main(int argc, char **argv)
     check_args(argc, argv, &main);
     create_philos(&main);
     create_threads(&main);
+    join_threads(&main);
     system("leaks -q philo");
     return (0);
 }
@@ -28,12 +29,22 @@ void create_threads(t_main *main)
     int i;
 
     i = 0;
-    main->threads = malloc(sizeof(pthread_t) * main->args.n_of_philos);
     while (i < main->args.n_of_philos)
     {
-        //main->philo[i].args = &main->args;
-        pthread_create(&main->threads[i], NULL, philo_actions, &main->philo[i]);
-        usleep(2000);
+        pthread_create(&main->philo[i].thread, NULL, philo_actions, &main->philo[i]);
+        usleep(50);
         i++;
     }
+}
+void    join_threads(t_main *main)
+{
+    int i;
+
+    i = 0;
+    while (i < main->args.n_of_philos)
+    {
+        pthread_join(main->philo[i].thread, NULL);
+        i++;
+    }
+
 }
