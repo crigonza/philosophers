@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:31:48 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/15 12:56:34 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/18 18:58:51 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@
 
 typedef struct s_args
 {
+	int				is_dead;
 	unsigned int	start;
 	int				n_of_philos;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				times_must_eat;
+	int				must_eat_count;
 }					t_args;
 
 typedef struct s_fork
@@ -35,11 +37,20 @@ typedef struct s_fork
 	pthread_mutex_t	mutex;
 }					t_fork;
 
+typedef enum e_state {
+	TAKEFORK,
+    THINKING,
+    EATING,
+    SLEEPING,
+	DEAD
+} t_state;
+
 typedef struct s_philo
 {
-	int				death;
+	t_state			state;
 	int				id;
-	unsigned int	last;
+	long long		last_time;
+	int				meals;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	t_args			*args;
@@ -51,7 +62,6 @@ typedef struct s_main
 	t_args			args;
 	t_philo			*philo;
 	t_fork			*fork;
-	//pthread_t		*threads;
 }					t_main;
 
 //------------------check_args.c--------------------//
@@ -64,14 +74,16 @@ int					philo_is_eating(t_philo *philo);
 void				philo_is_sleeping(t_philo *philo);
 //--------------------main.c------------------------//
 int					main(int argc, char **argv);
-void				create_threads(t_main *main);
+int					create_threads(t_main *main);
 void				join_threads(t_main *main);
+int					watcher(t_philo *philo);
+void			    cancel_threads(t_main *main);
 //--------------------states.c----------------------//
 void				*philo_actions(void *args);
-int					check_death(t_philo *philo);
+void    			*check_state(void *args);
 //--------------------utils.c-----------------------//
 int					ph_atoi(const char *nptr);
-void				print_actions(t_philo *philo, int action);
-unsigned int		get_time(void);
+void				print_actions(t_philo *philo);
+long long			get_time(void);
 
 #endif

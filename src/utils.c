@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/15 10:28:17 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/18 18:50:34 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,30 @@ int	ph_atoi(const char *nptr)
 	return (result * n);
 }
 
-void print_actions(t_philo *philo, int action)
+void print_actions(t_philo *philo)
 {
-    unsigned int time;
+    long long time;
 
     time = get_time() - philo->args->start;
-    if(action == 1)
-        printf("%u %d has taken a fork\n", time, philo->id);
-    if(action == 2)
-        printf("%u %d is eating\n", time, philo->id);
-    if(action == 3)
-        printf("%u %d is sleeping\n", time, philo->id);
-    if(action == 4)
-        printf("%u %d is thinking\n", time, philo->id);
-    if(action == 5)
-        printf("%u %d died\n", time, philo->id);
-	
+	if(!philo->args->is_dead)
+	{
+		if(philo->state == TAKEFORK)
+			printf("%lld %d has taken a fork\n", time, philo->id);
+		if(philo->state == EATING)
+			printf("%lld %d is eating\n", time, philo->id);
+		if(philo->state == SLEEPING)
+			printf("%lld %d is sleeping\n", time, philo->id);
+		if(philo->state == THINKING)
+			printf("%lld %d is thinking\n", time, philo->id);
+	}
+	if(philo->state == DEAD)
+		printf("%lld %d died\n", time, philo->id);
 }
 
-unsigned int get_time(void)
+long long get_time(void)
 {
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec * 0.001));
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
