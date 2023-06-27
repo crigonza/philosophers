@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:31:48 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/18 18:58:51 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/27 18:32:40 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_philo
 	t_fork			*right_fork;
 	t_args			*args;
 	pthread_t		thread;
+	pthread_mutex_t	dead_lock;
 }					t_philo;
 
 typedef struct s_main

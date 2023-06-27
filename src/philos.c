@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:26:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/18 19:41:56 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/27 19:20:13 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void create_philos(t_main *main)
         main->philo[i].meals = 0;
         main->philo[i].args = &main->args;
         main->philo[i].last_time = get_time();
-        //main->philo[i].thread = malloc(sizeof(pthread_t));
+        pthread_mutex_init(&main->philo[i].dead_lock, NULL);
         if (i != 0)
             main->philo[i].left_fork = &main->fork[i - 1];
         main->philo[i].right_fork = &main->fork[i];
@@ -35,14 +35,6 @@ void create_philos(t_main *main)
     }
     i--;
     main->philo[0].left_fork = &main->fork[i];
-
-    /* while(i >= 0)
-    {
-        printf("filosofo id: %d  ", main->philo[i].id);
-        printf("tenedor izq: %d  ", main->philo[i].left_fork->id);
-        printf("tenedor drch: %d\n", main->philo[i].right_fork->id);
-        i--;
-    } */
 }
 
 void take_time(int time)
@@ -89,8 +81,6 @@ void check_meals(t_philo *philo)
         if(philo->args->must_eat_count != 0)
             philo->args->must_eat_count--;
     }
-    /* printf("*******philo %d meals: %d*******\n", philo->id, philo->meals);
-    printf("*******all ate: %d*******\n", philo->args->must_eat_count); */
 }
 
 int philo_is_eating(t_philo *philo)
