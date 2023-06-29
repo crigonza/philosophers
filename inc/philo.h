@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:31:48 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/28 19:00:25 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 12:11:09 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_philo
 {
 	t_state			state;
 	int				id;
-	long long		last_time;
+	long int		last_time;
 	int				meals;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
@@ -69,7 +69,8 @@ typedef struct s_main
 
 //------------------check_args.c--------------------//
 int					check_args(int argc, char **argv, t_main *main);
-void				args_error(void);
+int					valid_args(int argc, char **argv);
+int					get_args(int argc, char **argv, t_main *main);
 //-------------------philos.c-----------------------//
 void				create_philos(t_main *main);
 int					pick_forks(t_philo *philo);
@@ -90,7 +91,7 @@ void				*check_state(void *args);
 //--------------------utils.c-----------------------//
 int					ph_atoi(const char *nptr);
 void				print_actions(t_philo *philo);
-unsigned int		get_time(void);
-void				take_time(int time);
+long int			get_time(void);
+void				take_time(long int time);
 
 #endif

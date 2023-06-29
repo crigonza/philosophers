@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:05:31 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/28 19:01:48 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:02:19 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	main(int argc, char **argv)
 {
 	t_main	main;
 
-	if(!check_args(argc, argv, &main))
+	if (!check_args(argc, argv, &main))
 		return (0);
 	create_philos(&main);
 	if (!create_threads(&main))
@@ -39,7 +39,7 @@ int	create_threads(t_main *main)
 		if (pthread_create(&main->philo[i].thread, NULL, philo_actions,
 				&main->philo[i]) != 0)
 			return (0);
-		usleep(50);
+		usleep(10);
 		i++;
 	}
 	return (1);

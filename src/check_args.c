@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:33:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/29 08:16:13 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 09:44:57 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	valid_args(int argc, char **argv)
 {
 	int	i;
 	int	j;
-	int number;
+	int	number;
 
 	i = 1;
 	while (i < argc)
@@ -26,7 +26,7 @@ int	valid_args(int argc, char **argv)
 		while (argv[i][j])
 		{
 			if (argv[i][j] >= 48 && argv[i][j] <= 57)
-				number ++;
+				number++;
 			j++;
 		}
 		if (!number)
@@ -36,13 +36,8 @@ int	valid_args(int argc, char **argv)
 	return (1);
 }
 
-int	check_args(int argc, char **argv, t_main *main)
+int	get_args(int argc, char **argv, t_main *main)
 {
-	if (!valid_args(argc, argv))
-	{
-		printf("Error, invalid arguments!\n");
-		return(0);
-	}
 	if (argc == 5 || argc == 6)
 	{
 		main->args.is_dead = 0;
@@ -59,14 +54,28 @@ int	check_args(int argc, char **argv, t_main *main)
 			main->args.times_must_eat = -1;
 	}
 	else
-	{
-		printf("Error, invalid arguments!\n");
-		return(0);
-	}
+		return (0);
 	return (1);
 }
 
-void	args_error(void)
+int	check_args(int argc, char **argv, t_main *main)
 {
-	printf("Error, invalid arguments!\n");
+	if (!valid_args(argc, argv))
+	{
+		printf("Error, invalid arguments!\n");
+		return (0);
+	}
+	if (!get_args(argc, argv, main))
+	{
+		printf("Error, invalid arguments!\n");
+		return (0);
+	}
+	if (main->args.n_of_philos == 0 || main->args.time_to_die == 0
+		|| main->args.time_to_eat == 0 || main->args.time_to_sleep == 0
+		|| main->args.times_must_eat == 0)
+	{
+		printf("Error, invalid arguments!\n");
+		return (0);
+	}
+	return (1);
 }

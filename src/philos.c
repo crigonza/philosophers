@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:26:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/28 18:33:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:08:45 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,18 @@ int	pick_forks(t_philo *philo)
 	{
 		if (pthread_mutex_lock(&philo->left_fork->mutex) != 0)
 			return (0);
-		pthread_mutex_lock(&philo->action_mutex);
+		// pthread_mutex_lock(&philo->action_mutex);
 		philo->state = TAKEFORK;
 		print_actions(philo);
-		pthread_mutex_unlock(&philo->action_mutex);
+		// pthread_mutex_unlock(&philo->action_mutex);
 		if (!philo->args->is_dead)
 		{
 			if (pthread_mutex_lock(&philo->right_fork->mutex) != 0)
 				return (0);
-			pthread_mutex_lock(&philo->action_mutex);
+			// pthread_mutex_lock(&philo->action_mutex);
 			philo->state = TAKEFORK;
 			print_actions(philo);
-			pthread_mutex_unlock(&philo->action_mutex);
+			// pthread_mutex_unlock(&philo->action_mutex);
 		}
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 14:11:28 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/28 18:22:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 11:51:49 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@ int	check_death(t_philo *philo)
 		if ((int)(get_time() - philo[i].last_time) > (philo->args->time_to_die))
 		{
 			pthread_mutex_lock(&philo->args->dead_mutex);
+			pthread_mutex_lock(&philo->action_mutex);
 			philo[i].state = DEAD;
 			philo->args->is_dead = 1;
 			print_actions(&philo[i]);
+			pthread_mutex_unlock(&philo->action_mutex);
 			pthread_mutex_unlock(&philo->args->dead_mutex);
 			return (0);
 		}

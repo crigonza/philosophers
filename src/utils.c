@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/28 18:03:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/06/29 13:03:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	print_actions(t_philo *philo)
 		printf("%u %d died\n", time, philo->id);
 }
 
-unsigned int	get_time(void)
+long int	get_time(void)
 {
 	struct timeval	time;
 
@@ -66,16 +66,18 @@ unsigned int	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	take_time(int time)
+void	take_time(long int time)
 {
-	int	start;
-	int	now;
+	long int	start;
+	long int	now;
 
 	now = 0;
-	start = (int)get_time();
-	while (time != now)
+	start = get_time();
+	while (now < time)
 	{
-		usleep(10);
+		usleep(time / 10);
 		now = get_time() - start;
+		/* if( time < now)
+			break; */
 	}
 }
