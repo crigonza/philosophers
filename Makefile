@@ -6,16 +6,21 @@
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/19 08:19:48 by crigonza          #+#    #+#              #
-#    Updated: 2023/06/27 19:34:26 by crigonza         ###   ########.fr        #
+#    Updated: 2023/06/29 08:15:25 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo
 CC		= gcc
-CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=thread
+CFLAGS	= -Wall -Werror -Wextra
 
 HEADERS = -I ./inc
-SRCS 	= $(shell find ./src -iname "*.c")
+SRCS 	= 	./src/main.c \
+			./src/philos.c \
+			./src/states.c \
+			./src/utils.c \
+			./src/check_args.c \
+			
 OBJS	= ${SRCS:.c=.o}
 
 %.o: &.c
