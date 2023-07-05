@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:33:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/29 09:44:57 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:17:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,17 @@ int	valid_args(int argc, char **argv)
 {
 	int	i;
 	int	j;
-	int	number;
 
 	i = 1;
 	while (i < argc)
 	{
 		j = 0;
-		number = 0;
 		while (argv[i][j])
 		{
-			if (argv[i][j] >= 48 && argv[i][j] <= 57)
-				number++;
+			if (argv[i][j] < 48 || argv[i][j] > 57)
+				return (0);
 			j++;
 		}
-		if (!number)
-			return (0);
 		i++;
 	}
 	return (1);

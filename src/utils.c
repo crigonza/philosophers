@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/04 19:47:07 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:02:16 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,21 @@ int	ph_atoi(const char *nptr)
 	return (result * n);
 }
 
-void	print_actions(t_philo *philo)
+void	print_actions(t_philo *philo , char *state)
 {
+	int is_dead;
 	unsigned int	time;
 
 	time = get_time() - philo->args->start;
 	pthread_mutex_lock(&philo->args->dead_mutex);
-	if (!philo->args->is_dead)
-	{
-		if (philo->state == TAKEFORK)
-			printf("%u %d has taken a fork\n", time, philo->id);
-		if (philo->state == EATING)
-			printf("%u %d is eating\n", time, philo->id);
-		if (philo->state == SLEEPING)
-			printf("%u %d is sleeping\n", time, philo->id);
-		if (philo->state == THINKING)
-			printf("%u %d is thinking\n", time, philo->id);
-	}
-	if (philo->state == DEAD)
-		printf("%u %d died\n", time, philo->id);
+		is_dead = philo->args->is_dead;
 	pthread_mutex_unlock(&philo->args->dead_mutex);
+	pthread_mutex_lock(&philo->dead_lock);
+	if (state[0] == 'd')
+		printf("%u %d %s\n", time, philo->id, state);
+	if (!is_dead)
+		printf("%u %d %s\n", time, philo->id, state);
+	pthread_mutex_unlock(&philo->dead_lock);
 }
 
 long int	get_time(void)

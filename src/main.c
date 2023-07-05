@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:05:31 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/05 18:36:51 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:05:32 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,42 +21,10 @@ int	main(int argc, char **argv)
 	create_philos(&main);
 	if (!create_threads(&main))
 		return (0);
-	/* if (!watcher(main.philo))
-		return (0); */
 	join_threads(&main);
 	cancel_threads(&main);
-	//system("leaks -q philo");
+	system("leaks -q philo");
 	return (0);
-}
-
-void *monitor(t_main *main)
-{
-	int i;
-	int last;
-
-	i = 0;
-	last = 0;
-	while (1)
-	{
-		if (main->philo[i].meals == main->philo->args->times_must_eat)
-			return (NULL);
-		pthread_mutex_lock(&main->philo->action_mutex);
-		last = main->philo[i].last_time;
-		pthread_mutex_unlock(&main->philo->action_mutex);
-		if ((int)(get_time() - last) > (main->philo->args->time_to_die))
-		{
-			main->philo[i].state = DEAD;
-			pthread_mutex_lock(&main->philo->args->dead_mutex);
-			main->philo->args->is_dead = 1;
-			pthread_mutex_unlock(&main->philo->args->dead_mutex);
-			print_actions(&main->philo[i]);
-			return (NULL);
-		}
-		if (i == main->args.n_of_philos - 1)
-			i = 0;
-		else
-			i++;
-	}
 }
 
 int	create_threads(t_main *main)
@@ -72,7 +40,7 @@ int	create_threads(t_main *main)
 		usleep(60);
 		i++;
 	}
-	monitor(main);
+	check_state(main);
 	return (1);
 }
 
@@ -88,17 +56,6 @@ void	join_threads(t_main *main)
 	}
 }
 
-int	watcher(t_philo *philo)
-{
-	pthread_t	watcher;
-
-	if (pthread_create(&watcher, NULL, check_state, philo) != 0)
-		return (0);
-	pthread_join(watcher, NULL);
-	pthread_detach(watcher);
-	return (1);
-}
-
 void	cancel_threads(t_main *main)
 {
 	int	i;
@@ -109,8 +66,10 @@ void	cancel_threads(t_main *main)
 		pthread_detach(main->philo[i].thread);
 		pthread_mutex_unlock(&main->philo[i].left_fork->mutex);
 		pthread_mutex_destroy(&main->philo[i].left_fork->mutex);
-		pthread_mutex_unlock(&main->philo[i].action_mutex);
-		pthread_mutex_destroy(&main->philo[i].action_mutex);
+		pthread_mutex_unlock(&main->philo[i].last_time_mutex);
+		pthread_mutex_destroy(&main->philo[i].last_time_mutex);
+		pthread_mutex_unlock(&main->philo[i].dead_lock);
+		pthread_mutex_destroy(&main->philo[i].dead_lock);
 		i++;
 	}
 	pthread_mutex_unlock(&main->args.dead_mutex);

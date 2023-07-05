@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:31:48 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/04 18:40:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:17:57 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,17 @@ typedef struct s_fork
 	pthread_mutex_t	mutex;
 }					t_fork;
 
-typedef enum e_state
-{
-	TAKEFORK,
-	THINKING,
-	EATING,
-	SLEEPING,
-	DEAD
-}					t_state;
-
 typedef struct s_philo
 {
-	t_state			state;
 	int				id;
 	long int		last_time;
+	pthread_mutex_t	last_time_mutex;
 	int				meals;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	t_args			*args;
 	pthread_t		thread;
-	pthread_mutex_t	action_mutex;
+	pthread_mutex_t	dead_lock;
 }					t_philo;
 
 typedef struct s_main
@@ -73,24 +64,19 @@ int					valid_args(int argc, char **argv);
 int					get_args(int argc, char **argv, t_main *main);
 //-------------------philos.c-----------------------//
 void				create_philos(t_main *main);
-int					pick_forks(t_philo *philo);
-int					philo_is_eating(t_philo *philo);
-int				philo_is_sleeping(t_philo *philo);
-int				philo_is_thinking(t_philo *philo);
 //--------------------main.c------------------------//
 int					main(int argc, char **argv);
 int					create_threads(t_main *main);
 void				join_threads(t_main *main);
-int					watcher(t_philo *philo);
 void				cancel_threads(t_main *main);
 //--------------------states.c----------------------//
-int					check_death(t_philo *philo);
 void				check_meals(t_philo *philo);
 void				*philo_actions(void *args);
-void				*check_state(void *args);
+void				*check_state(t_main *main);
+void				philo_routine(t_philo *philo);
 //--------------------utils.c-----------------------//
 int					ph_atoi(const char *nptr);
-void				print_actions(t_philo *philo);
+void				print_actions(t_philo *philo, char *state);
 long int			get_time(void);
 void				take_time(long int time);
 
