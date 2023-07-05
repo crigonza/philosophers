@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 09:26:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/29 13:08:45 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/04 21:36:27 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,70 +39,89 @@ void	create_philos(t_main *main)
 
 int	pick_forks(t_philo *philo)
 {
-	if (!philo->args->is_dead)
+	if (pthread_mutex_lock(&philo->left_fork->mutex) == 0)
 	{
-		if (pthread_mutex_lock(&philo->left_fork->mutex) != 0)
-			return (0);
 		// pthread_mutex_lock(&philo->action_mutex);
 		philo->state = TAKEFORK;
 		print_actions(philo);
 		// pthread_mutex_unlock(&philo->action_mutex);
-		if (!philo->args->is_dead)
+		if (pthread_mutex_lock(&philo->right_fork->mutex) == 0)
 		{
-			if (pthread_mutex_lock(&philo->right_fork->mutex) != 0)
-				return (0);
 			// pthread_mutex_lock(&philo->action_mutex);
 			philo->state = TAKEFORK;
 			print_actions(philo);
 			// pthread_mutex_unlock(&philo->action_mutex);
 		}
+		else
+		{
+			pthread_mutex_unlock(&philo->left_fork->mutex);
+			return(0);
+		}
 	}
-	else
-		return (0);
 	return (1);
 }
 
 int	philo_is_eating(t_philo *philo)
 {
-	if (!philo->args->is_dead)
+	/* pthread_mutex_lock(&philo->args->dead_mutex);
+	if (philo->args->is_dead)
 	{
-		if (!pick_forks(philo))
-			return (0);
-		if (philo->args->is_dead)
-			return (0);
-		pthread_mutex_lock(&philo->action_mutex);
-		philo->last_time = get_time();
-		philo->state = EATING;
-		print_actions(philo);
-		if (philo->args->times_must_eat != -1)
-			check_meals(philo);
-		take_time(philo->args->time_to_eat);
-		pthread_mutex_unlock(&philo->action_mutex);
-		pthread_mutex_unlock(&philo->left_fork->mutex);
-		pthread_mutex_unlock(&philo->right_fork->mutex);
+		pthread_mutex_unlock(&philo->args->dead_mutex);
+		return (0);
 	}
+	pthread_mutex_unlock(&philo->args->dead_mutex); */
+	if (!pick_forks(philo))
+		return (0);
+	/* pthread_mutex_lock(&philo->args->dead_mutex);
+	if (philo->args->is_dead)
+	{
+		pthread_mutex_unlock(&philo->args->dead_mutex);
+		return (0);
+	}
+	pthread_mutex_unlock(&philo->args->dead_mutex); */
+	//pthread_mutex_lock(&philo->action_mutex);
+
+	pthread_mutex_lock(&philo->action_mutex);
+	philo->last_time = get_time();
+	pthread_mutex_unlock(&philo->action_mutex);
+	philo->state = EATING;
+	print_actions(philo);
+	pthread_mutex_lock(&philo->args->dead_mutex);
+	if (philo->args->times_must_eat != -1)
+		check_meals(philo);
+	pthread_mutex_unlock(&philo->args->dead_mutex);
+	take_time(philo->args->time_to_eat);
+	// pthread_mutex_unlock(&philo->action_mutex);
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	pthread_mutex_unlock(&philo->right_fork->mutex);
 	return (1);
 }
 
-void	philo_is_sleeping(t_philo *philo)
+int	philo_is_sleeping(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->action_mutex);
-	if (!philo->args->is_dead)
+	/* pthread_mutex_lock(&philo->args->dead_mutex);
+	if (philo->args->is_dead)
 	{
-		philo->state = SLEEPING;
-		print_actions(philo);
-		take_time(philo->args->time_to_sleep);
+		pthread_mutex_unlock(&philo->args->dead_mutex);
+		return (0);
 	}
-	pthread_mutex_unlock(&philo->action_mutex);
+	pthread_mutex_unlock(&philo->args->dead_mutex); */
+	philo->state = SLEEPING;
+	print_actions(philo);
+	take_time(philo->args->time_to_sleep);
+	return (1);
 }
 
-void	philo_is_thinking(t_philo *philo)
+int	philo_is_thinking(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->action_mutex);
-	if (!philo->args->is_dead)
+	/* pthread_mutex_lock(&philo->args->dead_mutex);
+	if (philo->args->is_dead)
 	{
-		philo->state = THINKING;
-		print_actions(philo);
+		pthread_mutex_unlock(&philo->args->dead_mutex);
+		return (0);
 	}
-	pthread_mutex_unlock(&philo->action_mutex);
+	pthread_mutex_unlock(&philo->args->dead_mutex); */
+	philo->state = THINKING;
+	print_actions(philo);
+	return (1);
 }

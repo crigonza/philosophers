@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/29 13:03:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/04 19:47:07 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	print_actions(t_philo *philo)
 	unsigned int	time;
 
 	time = get_time() - philo->args->start;
+	pthread_mutex_lock(&philo->args->dead_mutex);
 	if (!philo->args->is_dead)
 	{
 		if (philo->state == TAKEFORK)
@@ -56,6 +57,7 @@ void	print_actions(t_philo *philo)
 	}
 	if (philo->state == DEAD)
 		printf("%u %d died\n", time, philo->id);
+	pthread_mutex_unlock(&philo->args->dead_mutex);
 }
 
 long int	get_time(void)
@@ -69,15 +71,9 @@ long int	get_time(void)
 void	take_time(long int time)
 {
 	long int	start;
-	long int	now;
 
-	now = 0;
 	start = get_time();
-	while (now < time)
-	{
-		usleep(time / 10);
-		now = get_time() - start;
-		/* if( time < now)
-			break; */
-	}
+	usleep((time / 2) * 1000);
+	while (time > (get_time() - start))
+		usleep(50);
 }

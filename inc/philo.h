@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 08:31:48 by crigonza          #+#    #+#             */
-/*   Updated: 2023/06/29 12:11:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/04 18:40:09 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 typedef struct s_args
 {
 	int				is_dead;
-	unsigned int	start;
+	long int		start;
 	int				n_of_philos;
 	int				time_to_die;
 	int				time_to_eat;
@@ -75,8 +75,8 @@ int					get_args(int argc, char **argv, t_main *main);
 void				create_philos(t_main *main);
 int					pick_forks(t_philo *philo);
 int					philo_is_eating(t_philo *philo);
-void				philo_is_sleeping(t_philo *philo);
-void				philo_is_thinking(t_philo *philo);
+int				philo_is_sleeping(t_philo *philo);
+int				philo_is_thinking(t_philo *philo);
 //--------------------main.c------------------------//
 int					main(int argc, char **argv);
 int					create_threads(t_main *main);
