@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 14:11:28 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/05 21:14:12 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/06 08:21:08 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ void	check_meals(t_philo *philo)
 	}
 }
 
-void *check_state(t_main *main)
+void	*check_state(t_main *main)
 {
-	int i;
-	int last;
-	int meals;
+	int	i;
+	int	last;
+	int	meals;
 
 	i = 0;
 	while (1)
@@ -42,7 +42,7 @@ void *check_state(t_main *main)
 		meals = main->philo[i].meals;
 		last = main->philo[i].last_time;
 		pthread_mutex_unlock(&main->philo[i].last_time_mutex);
-		if ( meals == main->philo->args->times_must_eat)
+		if (meals == main->philo->args->times_must_eat)
 			return (NULL);
 		if ((int)(get_time() - last) > (main->philo->args->time_to_die))
 		{
@@ -53,13 +53,12 @@ void *check_state(t_main *main)
 			return (NULL);
 		}
 		if (i == main->args.n_of_philos - 1)
-			i = 0;
-		else
-			i++;
+			i = -1;
+		i++;
 	}
 }
 
-void philo_routine(t_philo *philo)
+void	philo_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->left_fork->mutex);
 	print_actions(philo, "has taken a fork");
@@ -82,21 +81,26 @@ void philo_routine(t_philo *philo)
 void	*philo_actions(void *args)
 {
 	t_philo	*philo;
+	int		died;
+	int		meals;
 
 	philo = (t_philo *)args;
-	pthread_mutex_lock(&philo->args->dead_mutex);
-	while (!philo->args->is_dead && philo->args->must_eat_count != 0)
+	died = 0;
+	while (!died && meals != 0)
 	{
+		pthread_mutex_lock(&philo->args->dead_mutex);
+		died = philo->args->is_dead;
+		meals = philo->args->must_eat_count;
 		pthread_mutex_unlock(&philo->args->dead_mutex);
 		if (philo->args->n_of_philos == 1)
 		{
 			pthread_mutex_lock(&philo->left_fork->mutex);
 			print_actions(philo, "has taken a fork");
-			break;
+			break ;
 		}
 		philo_routine(philo);
-		pthread_mutex_lock(&philo->args->dead_mutex);
+		//pthread_mutex_lock(&philo->args->dead_mutex);
 	}
-	pthread_mutex_unlock(&philo->args->dead_mutex);
+	//pthread_mutex_unlock(&philo->args->dead_mutex);
 	return (NULL);
 }

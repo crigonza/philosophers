@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/05 21:02:16 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/06 08:21:49 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	ph_atoi(const char *nptr)
 	return (result * n);
 }
 
-void	print_actions(t_philo *philo , char *state)
+void	print_actions(t_philo *philo, char *state)
 {
-	int is_dead;
+	int				is_dead;
 	unsigned int	time;
 
 	time = get_time() - philo->args->start;
