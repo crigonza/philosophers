@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 10:06:12 by crigonza          #+#    #+#             */
-/*   Updated: 2023/07/06 08:21:49 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/07/11 21:43:13 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,18 @@ int	ph_atoi(const char *nptr)
 void	print_actions(t_philo *philo, char *state)
 {
 	int				is_dead;
+	int				meals;
 	unsigned int	time;
 
 	time = get_time() - philo->args->start;
 	pthread_mutex_lock(&philo->args->dead_mutex);
 		is_dead = philo->args->is_dead;
+		meals = philo->args->must_eat_count;
 	pthread_mutex_unlock(&philo->args->dead_mutex);
 	pthread_mutex_lock(&philo->dead_lock);
 	if (state[0] == 'd')
 		printf("%u %d %s\n", time, philo->id, state);
-	if (!is_dead)
+	if (!is_dead && meals != 0)
 		printf("%u %d %s\n", time, philo->id, state);
 	pthread_mutex_unlock(&philo->dead_lock);
 }
